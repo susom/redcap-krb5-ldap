@@ -13,7 +13,6 @@ RUN apt-get update -qq && \
     libldap2-dev \
     libsasl2-dev \
     libmemcached11 libmemcachedutil2 build-essential libmemcached-dev libz-dev libfontconfig1 libxrender1 libxext6 libxi6 openssl libssl-dev \
-    memcached \
     libmemcached-tools \
     # MySql
     && docker-php-ext-install -j$(nproc) mysqli pdo_mysql opcache \
@@ -53,7 +52,7 @@ RUN yes | pecl install xdebug \
 
 
 EXPOSE 80
-#COPY webtools-redcap-ldap /var/www/html/webtools/redcap-ldap
+ADD webtools-redcap-ldap /var/www/html/webtools/redcap-ldap
 
 COPY krb5.conf /etc/
 
@@ -67,6 +66,7 @@ RUN printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
 COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     chown -R www-data:www-data /var/www/html/ && \
+    echo "<?php echo phpinfo(); ?>" >> /var/www/html/index.php && \
     mkdir /var/log/webtools && \
     chown -R www-data:www-data /var/log/webtools && \
     a2enmod rewrite
