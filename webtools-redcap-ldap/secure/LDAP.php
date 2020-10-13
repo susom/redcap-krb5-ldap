@@ -37,7 +37,7 @@ class LDAP
     $this->connected_server = null;
     foreach( $this->ldap_servers as $server )
     {
-      $this->ldap_handle = ldap_connect( $server );
+      $this->ldap_handle = ldap_connect( "ldap://" . $server );
       if ( $this->ldap_handle )
       {
         if ( ldap_bind( $this->ldap_handle ) )
@@ -45,10 +45,11 @@ class LDAP
           ldap_set_option( $this->ldap_handle, LDAP_OPT_PROTOCOL_VERSION, 3 );
 
           //if ( !getenv( 'KRB5CCNAME' ) )
-            putenv('KRB5CCNAME=FILE:/etc/krb5cc_ldap.new');
-            #putenv('KRB5CCNAME=FILE:/etc/httpd/conf/webauth/krb5cc_ldap');
-            //putenv('KRB5CCNAME=FILE:/tmp/service-apache.tkt');
-          if( $this->ldap = @ldap_bind( $this->ldap_handle, "", ""  ) )
+            #putenv('KRB5CCNAME=FILE:/etc/krb5kdc/krb5cc_ldap.new');
+
+            # this file will be generated after kinit command.
+            putenv('KRB5CCNAME=FILE:/tmp/krb5cc_0');
+          if( $this->ldap = @ldap_sasl_bind( $this->ldap_handle, "", "", "GSSAPI" , 'stanford.edu' ) )
           {
             $this->connected_server = $server;
             break;

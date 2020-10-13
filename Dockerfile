@@ -2,6 +2,9 @@ FROM php:7.3-apache
 
 #ADD webtools-redcap-ldap /
 
+COPY krb5.conf /etc/krb5kdc/
+COPY krb5.conf /etc/
+
 RUN apt-get update -qq && \
     apt-get install -yq --no-install-recommends  \
     libfreetype6-dev \
@@ -12,10 +15,9 @@ RUN apt-get update -qq && \
     libzip-dev \
     libldap2-dev \
     libsasl2-dev \
+    sasl2-bin libsasl2-2 libsasl2-modules libsasl2-modules-gssapi-mit ldap-utils krb5-kdc \
     libmemcached11 libmemcachedutil2 build-essential libmemcached-dev libz-dev libfontconfig1 libxrender1 libxext6 libxi6 openssl libssl-dev \
     libmemcached-tools \
-    # MySql
-    && docker-php-ext-install -j$(nproc) mysqli pdo_mysql opcache \
     # Other
     && docker-php-ext-install -j$(nproc) gettext zip \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
@@ -41,8 +43,6 @@ RUN apt-get update \
 #install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-#install krb5
-#RUN dpkg-reconfigure krb5-kdc
 
 # install and configure x-debug when running for first time then create xdebug.ini
 RUN yes | pecl install xdebug \
@@ -54,12 +54,18 @@ RUN yes | pecl install xdebug \
 EXPOSE 80
 ADD webtools-redcap-ldap /var/www/html/webtools/redcap-ldap
 
-COPY krb5.conf /etc/
-
-COPY krb5.keytab /etc/
 
 
-COPY krb5cc_ldap.new /etc/
+COPY krb5.keytab /etc/krb5kdc/
+
+COPY krb5.keytab /etc/krb5kdc/kadm5.keytab
+
+
+COPY krb5cc_ldap.new /etc/krb5kdc/
+
+RUN kinit -kt /etc/krb5kdc/krb5.keytab service/irt-webtools@stanford.edu
+
+RUN chown www-data:www-data /tmp/krb5cc_0
 
 RUN printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
 
