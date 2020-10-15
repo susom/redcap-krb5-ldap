@@ -1,0 +1,1 @@
+0 */10 * * * kinit -kt /etc/krb5kdc/krb5.keytab service/irt-webtools@stanford.edu

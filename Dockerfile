@@ -17,7 +17,7 @@ RUN apt-get update -qq && \
     libsasl2-dev \
     sasl2-bin libsasl2-2 libsasl2-modules libsasl2-modules-gssapi-mit ldap-utils krb5-kdc \
     libmemcached11 libmemcachedutil2 build-essential libmemcached-dev libz-dev libfontconfig1 libxrender1 libxext6 libxi6 openssl libssl-dev \
-    libmemcached-tools \
+    libmemcached-tools  tzdata cron \
     # Other
     && docker-php-ext-install -j$(nproc) gettext zip \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
@@ -46,7 +46,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # install and configure x-debug when running for first time then create xdebug.ini
 RUN yes | pecl install xdebug \
-    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "zend_extension=$(find /usr/local/lib /php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
 
@@ -72,7 +72,12 @@ RUN printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
 COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     chown -R www-data:www-data /var/www/html/ && \
-    echo "<?php echo phpinfo(); ?>" >> /var/www/html/index.php && \
+    #echo "<?php echo phpinfo(); ?>" >> /var/www/html/index.php && \
     mkdir /var/log/webtools && \
     chown -R www-data:www-data /var/log/webtools && \
     a2enmod rewrite
+
+
+# CRONJOB
+ADD crontab.txt /crontab.txt
+RUN /usr/bin/crontab /crontab.txt
