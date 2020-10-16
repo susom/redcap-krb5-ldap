@@ -79,5 +79,11 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
 
 
 # CRONJOB
+
+
 ADD crontab.txt /crontab.txt
 RUN /usr/bin/crontab /crontab.txt
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod 777 /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
