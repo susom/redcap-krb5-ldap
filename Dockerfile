@@ -54,7 +54,7 @@ RUN yes | pecl install xdebug \
 EXPOSE 80
 ADD webtools-redcap-ldap /var/www/html/webtools/redcap-ldap
 
-
+COPY index.php /var/www/html/
 
 COPY krb5.keytab /etc/krb5kdc/
 
@@ -63,9 +63,7 @@ COPY krb5.keytab /etc/krb5kdc/kadm5.keytab
 
 COPY krb5cc_ldap.new /etc/krb5kdc/
 
-RUN kinit -kt /etc/krb5kdc/krb5.keytab service/irt-webtools@stanford.edu
 
-RUN chown www-data:www-data /tmp/krb5cc_0
 
 RUN printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
 
@@ -87,3 +85,7 @@ RUN /usr/bin/crontab /crontab.txt
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 777 /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
+
+RUN kinit -kt /etc/krb5kdc/krb5.keytab service/irt-webtools@stanford.edu
+
+RUN chown www-data:www-data /tmp/krb5cc_0

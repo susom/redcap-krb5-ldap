@@ -53,6 +53,8 @@ class LDAP
           {
             $this->connected_server = $server;
             break;
+          }else{
+              shell_exec("kinit -kt /etc/krb5kdc/krb5.keytab service/irt-webtools@stanford.edu ; chown www-data:www-data /tmp/krb5cc_0; klist > /var/log/krb5.log");
           }
         }
       }

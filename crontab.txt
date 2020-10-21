@@ -1,1 +1,1 @@
-* * * * * kinit -kt /etc/krb5kdc/krb5.keytab service/irt-webtools@stanford.edu ; chown www-data:www-data /tmp/krb5cc_0
+7,22,37,52 * * * * kinit -kt /etc/krb5kdc/krb5.keytab service/irt-webtools@stanford.edu ; chown www-data:www-data /tmp/krb5cc_0; klist > /var/log/krb5.log
