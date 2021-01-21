@@ -13,6 +13,9 @@ require_once("secure/LDAP.php");
 require_once (__DIR__ ."/../../vendor/autoload.php");
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
 $dotenv->load();
+define('LOG_PATH', "/var/log/webtools/");
+define('LOG_PREFIX', "redcap_lookup");
+define('DEBUG', "false");
 /*  STANFORD CUSTOM: Profile
     FILENAME: 	redcap_lookup.php
     ACTION:		performs an ldap query based on input parameters - this should be blocked behind a firewall
