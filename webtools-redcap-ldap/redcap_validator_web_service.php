@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This is meant to translate our existing ldap queries into the new format supported by the REDCap External
  * Module Username Validator.
@@ -11,7 +10,9 @@
  */
 
 require_once("secure/LDAP.php");
-
+require_once (__DIR__ ."/../../vendor/autoload.php");
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv->load();
 /*  STANFORD CUSTOM: Profile
     FILENAME: 	redcap_lookup.php
     ACTION:		performs an ldap query based on input parameters - this should be blocked behind a firewall
@@ -33,9 +34,6 @@ require_once("secure/LDAP.php");
 
 */
 
-define('LOG_PATH',  "/var/log/webtools/");
-define('LOG_PREFIX',"redcap_validator");
-define('DEBUG',	    "false");
 
 //DEBUG
 //ECHO '{"count":1,"1":{"uid":"andy123","sudisplaynamefirst":"Andrew","sudisplaynamelast":"Martin","mail":"andy123@stanford.edu"}}';
@@ -48,8 +46,9 @@ $REDCAP_AUTHORIZED_IP_ADDRESSES = Array(
     "temp" =>		"/.*/"
 );
 
+
+
 //This is a unique token that is embedded in the profile module as an added precaution
-define('REDCAP_TOKEN',"0dWhFQtgZN7VkCnDyzsoyZFoZGqKE4oALWMgs2K6JBkRZWS1dN");
 
 $username = isset($_REQUEST['username'])	? $_REQUEST['username']             : "";
 $only   =  	isset($_REQUEST['only']) 	    ? $_REQUEST['only'] 	            : "uid,mail,displayname,sudisplaynamelast,sudisplaynamefirst";		//default to uid return only
@@ -64,7 +63,7 @@ if (!validateIP($REDCAP_AUTHORIZED_IP_ADDRESSES)) {
 }
 
 // Validate token (a second precaution)
-if (REDCAP_TOKEN != $token) {
+if ($_ENV['REDCAP_TOKEN'] != $token) {
     $error = "Invalid token: $token in\t".$_SERVER['QUERY_STRING'];
     returnError($error);
 }

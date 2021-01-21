@@ -22,7 +22,9 @@
 */
 
 require_once("secure/LDAP.php");
-
+require_once (__DIR__ ."/../../vendor/autoload.php");
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv->load();
 define('LOG_PATH', "/var/log/webtools/");
 define('LOG_PREFIX', "redcap_lookup");
 define('DEBUG', "false");
@@ -47,7 +49,6 @@ $REDCAP_AUTHORIZED_IP_ADDRESSES = array(
 );
 
 //This is a unique token that is embedded in the profile module as an added precaution
-define('REDCAP_TOKEN', "0dWhFQtgZN7VkCnDyzsoyZFoZGqKE4oALWMgs2K6JBkRZWS1dN");
 
 $userid = isset($_REQUEST['userid']) ? $_REQUEST['userid'] : "";
 $only = isset($_REQUEST['only']) ? $_REQUEST['only'] : "uid,mail,displayname,sudisplaynamelast,sudisplaynamefirst";        //default to uid return only
@@ -62,7 +63,7 @@ if (!validateIP($REDCAP_AUTHORIZED_IP_ADDRESSES)) {
 }
 
 //validate token (a second precaution)
-if (REDCAP_TOKEN != $token) {
+if ($_ENV['REDCAP_TOKEN'] != $token) {
     $error = "Invalid token: $token in\t" . $_SERVER['QUERY_STRING'];
     returnError($error);
 }

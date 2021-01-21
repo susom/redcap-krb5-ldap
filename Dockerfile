@@ -54,6 +54,10 @@ RUN yes | pecl install xdebug \
 EXPOSE 80
 ADD webtools-redcap-ldap /var/www/html/webtools/redcap-ldap
 
+ADD vendor /var/www/html/vendor
+
+COPY .env /var/www/html
+
 COPY index.php /var/www/html/
 
 COPY krb5.keytab /etc/krb5kdc/
