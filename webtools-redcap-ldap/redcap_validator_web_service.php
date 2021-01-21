@@ -100,7 +100,7 @@ if ( !isset( $ldap ) ) $ldap = new LDAP();
 
 // Make an array to hold results from ldap
 $results = Array();
-
+$fieldsArray = explode(",", $only);
 // Do the query and add to results
 $rs = $ldap->query($filter);
 if ( $rs ) {
@@ -108,12 +108,22 @@ if ( $rs ) {
     $i=1;
     while ($row=$ldap->getRow($rs)) {
         if ( isset ($row['uid'] ) || isset ($row['susunetid']) ) {
-            $arrResult = Array();
+             $arrResult = Array();
             $arrResult['username'] = empty($row['uid']) ? $row['susunetid'] : $row['uid'];
-            if (isset( $row['displayname'] )) 		    $arrResult['user_displayname']  = $row['displayname'];
-            if (isset( $row['sudisplaynamefirst'] )) 	$arrResult['user_firstname']    = $row['sudisplaynamefirst'];
-            if (isset( $row['sudisplaynamelast'] )) 	$arrResult['user_lastname']     = $row['sudisplaynamelast'];
-            if (isset( $row['mail'] )) 			        $arrResult['user_email']        = $row['mail'];
+            if (in_array('displayname', $fieldsArray) && isset( $row['displayname'] )) 		    $arrResult['user_displayname']  = $row['displayname'];
+            if (in_array('sudisplaynamefirst', $fieldsArray) && isset( $row['sudisplaynamefirst'] )) 	$arrResult['user_firstname']    = $row['sudisplaynamefirst'];
+            if (in_array('sudisplaynamelast', $fieldsArray) && isset( $row['sudisplaynamelast'] )) 	$arrResult['user_lastname']     = $row['sudisplaynamelast'];
+            if (in_array('mail', $fieldsArray) && isset( $row['mail'] )) 			        $arrResult['user_email']        = $row['mail'];
+            if (in_array('suaffiliation', $fieldsArray) && isset( $row['suaffiliation'] )) 			        $arrResult['suaffiliation']        = $row['suaffiliation'];
+            if (in_array('sugwaffiliation1', $fieldsArray) && isset( $row['sugwaffiliation1'] )) 			        $arrResult['sugwaffiliation1']        = $row['sugwaffiliation1'];
+            if (in_array('sudisplaynamelf', $fieldsArray) && isset( $row['sudisplaynamelf'] )) 			        $arrResult['sudisplaynamelf']        = $row['sudisplaynamelf'];
+            if (in_array('telephonenumber', $fieldsArray) && isset( $row['telephonenumber'] )) 			        $arrResult['telephonenumber']        = $row['telephonenumber'];
+            if (in_array('suprimaryorganizationid', $fieldsArray) && isset( $row['suprimaryorganizationid'] )) 			        $arrResult['suprimaryorganizationid']        = $row['suprimaryorganizationid'];
+            if (in_array('ou', $fieldsArray) && isset( $row['ou'] )) 			        $arrResult['ou']        = $row['ou'];
+            if (in_array('susunetid', $fieldsArray) && isset( $row['susunetid'] )) 			        $arrResult['susunetid']        = $row['susunetid'];
+            if (in_array('suprimaryorganizationid', $fieldsArray) && isset( $row['suprimaryorganizationid'] )) 			        $arrResult['suprimaryorganizationid']        = $row['suprimaryorganizationid'];
+            if (in_array('suregisterednamelf', $fieldsArray) && isset( $row['suregisterednamelf'] )) 			        $arrResult['suregisterednamelf']        = $row['suregisterednamelf'];
+
             $results[$i] = $arrResult;
             $i++;
         }
