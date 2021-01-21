@@ -62,7 +62,9 @@
 */
 
 require_once("secure/LDAP.php");
-
+require_once (__DIR__ ."/../../vendor/autoload.php");
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv->load();
 define('LOG_PATH',	"/var/log/webtools/");
 define('LOG_PREFIX',"ldap_autocomplete");
 define('DEBUG',	"false");
@@ -74,11 +76,11 @@ $AUTHORIZED_IP_ADDRESSES = Array(
 	"cci-webapp-devrc-02" 		=> "/172\.25\.104\.89/");
 
 $AUTHORIZED_TOKENS = Array(
-	"REDCAP_TOKEN"	=> "0dWhFQtgZN7VkCnDyzsoyZFoZGqKE4oALWMgs2K6JBkRZWS1dN",
-	"EXCEL_TOKEN"		=> "LqjcQQei95e2tLjgQZr7KnHcCejJTLea",
-	"AMIE"					=> "pXJ5xNwj1PZQPowo8L2vGuxqlWaca1C2",
-	"REDCAP_DET"		=> "pXJ5xNwj1P",
-	"AUTOCOMPLETE"	=> "rFc0KnnEGeQZso8w");
+    "REDCAP_TOKEN"	=> $_ENV['REDCAP_TOKEN'],
+    "EXCEL_TOKEN" 	=> $_ENV['EXCEL_TOKEN'],
+    "AMIE"		=> $_ENV['AMIE'],
+    "REDCAP_DET"	=> $_ENV['REDCAP_DET'],
+    "AUTOCOMPLETE" => $_ENV['AUTOCOMPLETE']);
 
 $userid = 	isset($_REQUEST['userid'])	? $_REQUEST['userid'] : "";
 $only =  	isset($_REQUEST['only']) 	? $_REQUEST['only'] 	: "uid,mail,sudisplaynamelast,sudisplaynamefirst,ou,suaffiliation,sugwaffiliation1,telephonenumber";
