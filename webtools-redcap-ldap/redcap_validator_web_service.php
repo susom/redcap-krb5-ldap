@@ -94,6 +94,23 @@ if ($exact) {
 #### END OF SECURITY MEASURES ####
 
 
+## For stanfordhealthcare.org or
+// stanfordhealthcare.org
+// stanfordchildrens.org
+
+if (preg_match('/.*@(stanfordhealthcare\.org|stanfordchildrens\.org)$/', $username, $matches)) {
+    $result['status'] = true;
+    $result['user'] = [
+        "username" => strtolower($username),
+        "user_email" => strtolower($username)
+    ];
+    $result['message'] = "The username verification service does not currently work for non-SUNET based accounts.  You may continue without user verification but please double-check that the username entered is correct.<br>";
+    header('Content-Type: application/json');
+    echo json_encode($result);
+    exit;
+}
+
+
 
 ## DO THE LDAP LOOKUP
 
