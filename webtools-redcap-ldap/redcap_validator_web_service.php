@@ -98,7 +98,7 @@ if ($exact) {
 // stanfordhealthcare.org
 // stanfordchildrens.org
 
-if (preg_match('/.*@(stanfordhealthcare\.org|stanfordchildrens\.org)$/', $username, $matches)) {
+if (preg_match('/.*@(stanfordhealthcare\.org|stanfordchildrens\.org)$/i', $username, $matches)) {
     $result['status'] = true;
     $result['user'] = [
         "username" => strtolower($username),
