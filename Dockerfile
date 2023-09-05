@@ -61,12 +61,13 @@ ADD vendor /var/www/html/vendor
 
 COPY index.php /var/www/html/
 
-RUN touch krb5.keytab
+RUN touch /etc/krb5kdc/krb5.keytab
+RUN touch /etc/krb5kdc/kadm5.keytab
 
-COPY krb5.keytab /etc/krb5kdc/
+#COPY krb5.keytab /etc/krb5kdc/
 
 
-COPY krb5.keytab /etc/krb5kdc/kadm5.keytab
+#COPY krb5.keytab /etc/krb5kdc/kadm5.keytab
 
 
 #COPY krb5cc_ldap.new /etc/krb5kdc/
