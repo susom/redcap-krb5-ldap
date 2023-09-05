@@ -97,4 +97,4 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 #RUN kinit -kt /etc/krb5kdc/krb5.keytab service/irt-webtools@stanford.edu
 
-RUN chown www-data:www-data /tmp/krb5cc_0
+#RUN chown www-data:www-data /tmp/krb5cc_0
