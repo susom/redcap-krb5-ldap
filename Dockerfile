@@ -1,4 +1,4 @@
-FROM php:7.3-apache
+FROM php:8-apache
 
 #ADD webtools-redcap-ldap /
 
@@ -20,7 +20,7 @@ RUN apt-get update -qq && \
     libmemcached-tools  tzdata cron \
     # Other
     && docker-php-ext-install -j$(nproc) gettext zip \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     # Clean
     && apt-get clean \
@@ -31,10 +31,10 @@ RUN apt-get update -qq && \
 # *********************** LDAP modules  ***********************************
 
 RUN apt-get update \
-     && ln -s /usr/include/sasl/sasl.h /usr/lib/x86_64-linux-gnu/sasl.h \
+     && ln -s /usr/include/sasl/sasl.h /usr/lib/$(uname -m)-linux-gnu/sasl.h \
      && apt-get install libldap2-dev -y \
      && rm -rf /var/lib/apt/lists/* \
-     && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu --with-ldap-sasl  \
+     && docker-php-ext-configure ldap --with-libdir=lib/$(uname -m)-linux-gnu --with-ldap-sasl  \
      && docker-php-ext-install ldap
 
 # *********************** END LDAP modules  ***********************************
@@ -45,10 +45,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 
 # install and configure x-debug when running for first time then create xdebug.ini
-RUN yes | pecl install xdebug \
-    && echo "zend_extension=$(find /usr/local/lib /php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
+#RUN yes | pecl install xdebug \
+#    && echo "zend_extension=$(find /usr/local/lib /php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+#    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+#    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 
 EXPOSE 80
