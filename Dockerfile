@@ -56,7 +56,8 @@ ADD webtools-redcap-ldap /var/www/html/webtools/redcap-ldap
 
 ADD vendor /var/www/html/vendor
 
-COPY .env /var/www/html
+# Moved to docker-compose.yaml
+#COPY .env /var/www/html
 
 COPY index.php /var/www/html/
 
