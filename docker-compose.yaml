@@ -1,12 +1,11 @@
 version: '3'
 services:
   app:
-    env_file:
-        - ./.env
     build:
       context: ./
     volumes:
       - ./webtools-redcap-ldap:/var/www/html/webtools/redcap-ldap/:delegated
+      - ./.env:/var/www/html/.env
     ports:
       - "80:80"
     environment:

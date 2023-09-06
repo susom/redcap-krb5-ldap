@@ -57,17 +57,17 @@ ADD webtools-redcap-ldap /var/www/html/webtools/redcap-ldap
 ADD vendor /var/www/html/vendor
 
 # Moved to docker-compose.yaml
-#COPY .env /var/www/html
+COPY .env /var/www/html
 
 COPY index.php /var/www/html/
 
 RUN touch /etc/krb5kdc/krb5.keytab
 RUN touch /etc/krb5kdc/kadm5.keytab
 
-#COPY krb5.keytab /etc/krb5kdc/
+COPY krb5.keytab /etc/krb5kdc/
 
 
-#COPY krb5.keytab /etc/krb5kdc/kadm5.keytab
+COPY krb5.keytab /etc/krb5kdc/kadm5.keytab
 
 
 #COPY krb5cc_ldap.new /etc/krb5kdc/
@@ -95,6 +95,6 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod 777 /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-#RUN kinit -kt /etc/krb5kdc/krb5.keytab service/irt-webtools@stanford.edu
+RUN kinit -kt /etc/krb5kdc/krb5.keytab service/irt-webtools@stanford.edu
 
-#RUN chown www-data:www-data /tmp/krb5cc_0
+RUN chown www-data:www-data /tmp/krb5cc_0
